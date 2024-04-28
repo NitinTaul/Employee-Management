@@ -221,7 +221,12 @@
 //         let data= await fetch( `https://dbioz2ek0e.execute-api.ap-south-1.amazonaws.com/mockapi/get-employees?sortbyorder=${sort3.value}`)
 //         let 
 //     }
+gender.addEventListener("change", filterByGender());
 
-  
+//     search.addEventListener("input", updateProducts);
+    sort.addEventListener("change",sortBySalary());
+
+    // Initial products update on page load
+    showData();
   </script>
 </html>
