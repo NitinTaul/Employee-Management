@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Employee Management</title>
+    <style>
+      h1 {
+        font-size: 30px;
+        text-align: center;
+        margin: 20px auto;
+        color: chartreuse;
+      }
+
+      #btn {
+        width: 50%;
+        border-radius: 5px;
+        background-color: aliceblue;
+        color: cadetblue;
+        padding: 10px;
+      }
+      #nav {
+        width: 100%;
+        margin: 40px auto;
+        text-align: center;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+        background-color: aqua;
+        padding: 30px;
+      }
+      table {
+        margin: 20px auto;
+        border-collapse: collapse;
+        width: 80%;
+        color: #588c7e;
+        font-family: monospace;
+        font-size: 25px;
+        text-align: left;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Employee Management System</h1>
+    <div id="nav">
+      <button id="btn">Employee Info</button>
+      <div>
+        <label for="Filter By Department">Filter By Department</label>
+        <select
+          name="Filter By Department"
+          id="FDept"
+          onchange="filterByDepartment(department)"
+        >
+          <option value="finance">Finance</option>
+          <option value="engineering">Engineering</option>
+          <option value="operations">Operations</option>
+          <option value="marketing">Marketing</option>
+          <option value="hr">HR</option>
+        </select>
+      </div>
+      <div>
+        <label for="Filter By Gender">Filter By Gender</label>
+        <select
+          name="Filter By Gender"
+          id="FGender"
+          onchange="filterByGender(gender)"
+        >
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+          <option value="others">Others</option>
+        </select>
+      </div>
+      <div>
+        <label for="sort">Sort By Salary</label>
+        <select name="sort" id="sort3" onchange="sortBySalary()">
+          <option value="asc">Low to High</option>
+          <option value="desc">High to Low</option>
+        </select>
+      </div>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>S No.</th>
+          <th>Name</th>
+          <th>Gender</th>
+          <th>Department</th>
+          <th>Salary</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </body>
+  <script>
+    const tbody = document.getElementById("tbody");
+    const FGender = document.getElementById("FGender");
+    const sort = document.getElementById("sort");
+
+    // async function getData() {
+    //   try {
+    //     const response = await fetch(
+    //       "https://dbioz2ek0e.execute-api.ap-south-1.amazonaws.com/mockapi/get-employees"
+    //     );
+    //     const data = await response.json();
+    //     return data.data;
+    //   } catch (err) {
+    //     console.log(err);
+    //   }
+    // }
+
+    // function showdata(){
+    //     getData().then((data) => {
+    //       data.forEach((item, index) => {
+    //         const tr = document.createElement("tr");
+    //            trbody.innerHTML += `
+    //         <td>${index + 1}</td>
+    //         <td>${item.name}</td>
+    //         <td>${item.gender}</td>
+    //         <td>${item.department}</td>
+    //         <td>${item.salary}</td>
+    //         `;
+    //         tbody.append(tr);
+    //       });
+    //     });
+
+    // }
+
+    let Btn = document.getElementById("btn");
+    Btn.addEventListener("click", function () {
+      getData();
+    });
+    async function getData() {
+      let response = await fetch(
+        "https://dbioz2ek0e.execute-api.ap-south-1.amazonaws.com/mockapi/get-employees"
+      );
+      let data = await response.json();
+      showData(data);
+    }
+
+    function showData(data) {
+      const tbody = document.getElementById("tbody");
+      tbody.innerHTML = "";
+      data.data.map((item, index) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+            <td>${index + 1}</td>
+            <td>${item.name}</td>
+            <td>${item.gender}</td>
+            <td>${item.department}</td>
+            <td>${item.salary}</td>
+            `;
+        tbody.append(tr);
+      });
+      //   tr.style.cursor = "pointer";
+      // info.innerHTML = "";
+    }
+
+
+    
+    // const FDept = document.getElementById("FDept");
+    //     FDept.addEventListener("change", (e) => {
+    //       const selectedDept = e.target.value;
+    //       const filteredData = data.filter((employee) => {
+    //         return employee.department === selectedDept;
+    //       });
+    //       displayData(filteredData);
+    //     });
+
+    // const  department = document.getElementById("FDept");
+    // department.addEventListener("change", (e) => {
+    //   const selectedDept = e.target.value;
+    //   const filteredData3 = data.filter((employee) => {
+    //     return employee.department === selectedDept;
+    //   });
+    //   showData(filteredData3);
+    // });
+
+    const department = document.getElementById("FDept").value;
+  async function filterByDepartment(department) {
+      const data = await fetch(
+        "https://dbioz2ek0e.execute-api.ap-south-1.amazonaws.com/mockapi/get-employees"
+      );
+      let filteredData1 = data.filter((ele) => ele.department === department);
+      showData(filteredData1);
+    }
+
+
+
+    
+    // const FGender = document.getElementById("FGender");
+    const gender = document.getElementById("FGender").value;
+    async function filterByGender(gender) {
+      const data = await fetch(
+        "https://dbioz2ek0e.execute-api.ap-south-1.amazonaws.com/mockapi/get-employees"
+      );
+      let filteredData2 = data.data.filter((ele) => ele.gender === gender);
+      showData(filteredData2);
+    }
+
+    async function sortBySalary() {
+      let data = await fetch(
+        "https://dbioz2ek0e.execute-api.ap-south-1.amazonaws.com/mockapi/get-employees"
+      );
+      let sort = document.getElementById("sort3").value;
+      let sortedData;
+      if (sort == "asc") {
+        sortedData = data.data.sort((a, b) => {
+          return a.salary - b.salary;
+        });
+      } else if (sort == "desc") {
+        sortedData = data.data.sort((a, b) => {
+          return b.salary - a.salary;
+        });
+      } else {
+        sortedData = data;
+        showData(sortedData);
+      }
+    }
+
+//    async function sortBySalary(){
+//         let data= await fetch( `https://dbioz2ek0e.execute-api.ap-south-1.amazonaws.com/mockapi/get-employees?sortbyorder=${sort3.value}`)
+//         let 
+//     }
+
+  
+  </script>
+</html>
